@@ -18,6 +18,7 @@ Otherwise, gotta add "type":"module" in package.json
 */
 
 
+//start up express server
 const app = express();
 
 
@@ -56,3 +57,5 @@ app.use('/api', authRoute)
 app.listen(8000, () => {
     console.log("Server is listening on port 8000")
 })
+
+//also add a app.get() that catches all invalid url
