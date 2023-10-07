@@ -1,5 +1,6 @@
 const config = require('../config');
-
+const jwt = require('jsonwebtoken')
+const { emailTemp } = require('../helpers/email')
 
 module.exports.welcome = (req, res) => {
     res.send("This is /api home page")
@@ -11,20 +12,29 @@ module.exports.login = (req, res) => {
     })
 }
 
+
+/* 
+So, this preRegister will receive user input from the React front-end
+and use them to make a expireable activate token. Then it will use AWS SES to
+send a email to the user provided email address with the token. The token
+will then be used in '/register'
+*/
 module.exports.preRegister = async (req, res) => {
     try {
-        console.log(req.body)
+        //console.log(req.body)
         //const emailSent = true; ... will use AWS to sent email, if AWS return sent then emailSent = true
+        const { email, password } = req.body;
+        //when user try to register, they will receive a token that expires in certain amount of time
+        const token = jwt.sign({ email, password }, config.JWT_SECRET, {
+            expiresIn: '1h',
+        })
 
-        config.AWS_SES.sendEmail(
-            {
-                Source: config.EMAIL_FROM,
-                //Destination: req.body.email;
-                Destination: {
-                    ToAddresses: ["1648370611@qq.com"],
-                }
-            }
-            , (e, data) => {
+        config.AWS_SES.sendEmail(emailTemp(email, `
+            <p>Click on the link below to activate acount.</p>
+            <a href="${config.CLIENT_URL}/auth/account-activate/${token}">Active my account</a>
+        `, config.REPLY_TO,
+            "Activate Your Account"),
+            (e, data) => {
                 if (e) {
                     console.log(e)
                     return res.json({ ok: false })
@@ -38,5 +48,17 @@ module.exports.preRegister = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.json({ error: "Error occur, please try again." })
+    }
+}
+
+module.exports.register = async (req, res) => {
+    try {
+        //console.log(req.body);
+        const decoded = jwt.verify(req.body.token, config.JWT_SECRET);
+        //decoded is a JSON = {email, password, iat, exp}
+        console.log(decoded)
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: "Error occur. Please try again." })
     }
 }
