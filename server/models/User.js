@@ -4,27 +4,27 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     username: {
         type: String,
-        trim: true,
+        //trim: true,
         required: true,
-        unique: [true, 'This username has been used'],
+        //unique: [true, 'This username has been used'],
         lowercase: true
     },
     name: {
         type: String,
-        trim: true, //remove if incorrect
+        //trim: true, //remove if incorrect
         default: "",
     },
     email: {
         type: String,
-        trim: true,
+        //trim: true,
         required: true,
-        unique: [true, 'This emaill address has been used'],
+        //unique: [true, 'This emaill address has been used'],
         lowercase: true,
     },
     password: {
         type: String,
         required: true,
-        maxLength: 35,
+        maxLength: 300, //hashedpassowrd is stored, it's gonna be long
     },
     address: { type: String, default: "" },
     phone: { type: String, default: "" },
@@ -40,5 +40,7 @@ const userSchema = new Schema({
 
 }, { timestamps: true })
 
+//Create a Mongoose model based on the schema
+const User = mongoose.model("User", userSchema)
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = User;
