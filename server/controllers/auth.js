@@ -1,11 +1,16 @@
 const config = require('../config');
 const jwt = require('jsonwebtoken')
 const { emailTemp } = require('../helpers/email')
-const { hashedPassword, comparePassword } = require('../helpers/auth')
+const { comparePassword, hashPassword } = require('../helpers/auth')
 const User = require('../models/User')
 
 //nanoid is an ES6 module package, while I mostly use CommonJS
-const nanoid = import('nanoid')
+let nanoid;
+try {
+    nanoid = require('nanoid');
+} catch (err) {
+    nanoid = import('nanoid');
+}
 
 module.exports.welcome = (req, res) => {
     res.send("This is /api home page")
@@ -56,10 +61,31 @@ module.exports.preRegister = async (req, res) => {
 module.exports.register = async (req, res) => {
     try {
         //console.log(req.body);
-        const decoded = jwt.verify(req.body.token, config.JWT_SECRET);
-        //decoded is a JSON = {email, password, iat, exp}
-        console.log(decoded)
+        const { email, password } = jwt.verify(req.body.token, config.JWT_SECRET);
+        //decoded or {email, password} is a JSON = {email, password, iat, exp}
+        const hashedPassword = await hashPassword(password); //hashedPassword has a Promise, gotta use await
+        const newUser = await new User({
+            username: "test1",
+            email,
+            password: hashedPassword,
+        }).save(); //saving new instance also need await, so it's good to put it behind that.
 
+        const token = jwt.sign({ _id: newUser._id }, config.JWT_SECRET, {
+            expiresIn: '1h'
+        });
+
+        const refreshToken = jwt.sign({ _id: newUser._id }, config.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        newUser.password = undefined;
+        newUser.resetCode = undefined;
+
+        return res.json({
+            token,
+            refreshToken,
+            newUser,
+        })
     } catch (err) {
         console.log(err);
         return res.json({ error: "Error occur. Please try again." })
