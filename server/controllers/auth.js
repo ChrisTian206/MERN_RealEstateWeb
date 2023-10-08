@@ -1,8 +1,11 @@
 const config = require('../config');
 const jwt = require('jsonwebtoken')
 const { emailTemp } = require('../helpers/email')
-const { hassPassword, comparePassword } = require('../helpers/auth')
+const { hashedPassword, comparePassword } = require('../helpers/auth')
 const User = require('../models/User')
+
+//nanoid is an ES6 module package, while I mostly use CommonJS
+const nanoid = import('nanoid')
 
 module.exports.welcome = (req, res) => {
     res.send("This is /api home page")
@@ -56,6 +59,7 @@ module.exports.register = async (req, res) => {
         const decoded = jwt.verify(req.body.token, config.JWT_SECRET);
         //decoded is a JSON = {email, password, iat, exp}
         console.log(decoded)
+
     } catch (err) {
         console.log(err);
         return res.json({ error: "Error occur. Please try again." })

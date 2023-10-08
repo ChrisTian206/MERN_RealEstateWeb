@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema;
 
-const schema = Schema({
+const userSchema = new Schema({
     username: {
         type: String,
         trim: true,
         required: true,
-        unique: true,
+        unique: [true, 'This username has been used'],
         lowercase: true
     },
     name: {
@@ -18,7 +18,7 @@ const schema = Schema({
         type: String,
         trim: true,
         required: true,
-        unique: true,
+        unique: [true, 'This emaill address has been used'],
         lowercase: true,
     },
     password: {
@@ -36,8 +36,9 @@ const schema = Schema({
     },
     enquiredProperties: [{ type: Schema.Types.ObjectId, ref: 'Ad' }],
     wishlish: [{ type: Schema.Types.ObjectId, ref: 'Ad' }],
-    resetCode: "",
+    resetCode: {},
 
 }, { timestamps: true })
 
-export default model('User', schema)
+
+module.exports = mongoose.model("User", userSchema);
