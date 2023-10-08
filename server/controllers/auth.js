@@ -1,6 +1,8 @@
 const config = require('../config');
 const jwt = require('jsonwebtoken')
 const { emailTemp } = require('../helpers/email')
+const { hassPassword, comparePassword } = require('../helpers/auth')
+const User = require('../models/User')
 
 module.exports.welcome = (req, res) => {
     res.send("This is /api home page")
@@ -11,7 +13,6 @@ module.exports.login = (req, res) => {
         msg: 'Welcome to login page',
     })
 }
-
 
 /* 
 So, this preRegister will receive user input from the React front-end
@@ -43,8 +44,6 @@ module.exports.preRegister = async (req, res) => {
                     return res.json({ ok: true })
                 }
             });
-
-
     } catch (err) {
         console.log(err);
         return res.json({ error: "Error occur, please try again." })
