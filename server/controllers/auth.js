@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const { emailTemp } = require('../helpers/email')
 const { comparePassword, hashPassword } = require('../helpers/auth')
 const User = require('../models/User')
+const emailValidator = require('email-validator')
 
 //nanoid is an ES6 module package, while I mostly use CommonJS
 let nanoid;
@@ -33,6 +34,14 @@ module.exports.preRegister = async (req, res) => {
         //console.log(req.body)
         //const emailSent = true; ... will use AWS to sent email, if AWS return sent then emailSent = true
         const { email, password } = req.body;
+
+        //validate
+        if (!emailValidator.validate(email)) {
+            return res.json({ error: "invalid email address" })
+        }
+        if (!password) { return res.json({ error: "missing password" }) }
+        if (password && password?.length < 6) { return res.json({ error: "password length should be at least 6 chars" }) }
+
         //when user try to register, they will receive a token that expires in certain amount of time
         const token = jwt.sign({ email, password }, config.JWT_SECRET, {
             expiresIn: '1h',
