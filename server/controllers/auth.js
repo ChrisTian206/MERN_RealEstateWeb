@@ -6,12 +6,8 @@ const User = require('../models/User')
 const emailValidator = require('email-validator')
 
 //nanoid is an ES6 module package, while I mostly use CommonJS
-let nanoid;
-try {
-    nanoid = require('nanoid');
-} catch (err) {
-    nanoid = import('nanoid');
-}
+
+const { v4: uuid } = require('uuid')
 
 module.exports.welcome = (req, res) => {
     res.send("This is /api home page")
@@ -71,7 +67,7 @@ module.exports.register = async (req, res) => {
         //decoded or {email, password} is a JSON = {email, password, iat, exp}
         const hashedPassword = await hashPassword(password); //hashedPassword has a Promise, gotta use await
         const newUser = await new User({
-            username: "test1",
+            username: uuid(),
             email,
             password: hashedPassword,
         }).save(); //saving new instance also need await, so it's good to put it behind that.
@@ -84,6 +80,11 @@ module.exports.register = async (req, res) => {
             expiresIn: '7d'
         });
 
+
+        /** This process prevent use's hashedpassword being respond 
+         * to the other end. Because I will return res.json().
+         * Anyway, user's hashedpassword is actually saved in DB.
+         */
         newUser.password = undefined;
         newUser.resetCode = undefined;
 
@@ -111,6 +112,74 @@ module.exports.login = async (req, res) => {
         if (!match) { return res.json({ error: "incorrect password" }) };
 
         //3. create JWT token
+        const token = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
+            expiresIn: '1h'
+        });
+
+        const refreshToken = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        //4 send the response
+        user.password = undefined;
+        user.resetCode = undefined;
+
+        return res.json({
+            token,
+            refreshToken,
+            user,
+        })
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: "Error occur. Please try again." })
+    }
+}
+
+module.exports.forgotPassword = (async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email })
+        if (!user) { return res.json({ error: "invalid email address" }) }
+        else {
+            const resetCode = uuid();
+            user.resetCode = resetCode;
+            user.save()
+            const token = jwt.sign({ resetCode }, config.JWT_SECRET, {
+                expiresIn: '1h'
+            });
+
+            config.AWS_SES.sendEmail(
+                emailTemp(email, `
+                    <p>Click the link to access your account</p>
+                    <a href="${config.CLIENT_URL}/auth/access-account/${token}">Access Your Account</a>
+                `, config.REPLY_TO, 'Access your account'),
+                (e, data) => {
+                    if (e) {
+                        console.log(e)
+                        return res.json({ ok: false })
+                    } else {
+                        console.log(data)
+                        return res.json({ ok: true })
+                    }
+                }
+            )
+        }
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: "Error occur. Please try again." })
+    }
+})
+
+
+module.exports.accessAccount = async (req, res) => {
+    try {
+        const { resetCode } = jwt.verify(req.body.resetCode, config.JWT_SECRET);//req.body.resetCode will be passed in via POST request
+
+        const user = await User.findOneAndUpdate(
+            { resetCode }, //find by the above resetCode
+            { resetCode: '' } // once find, erase it. So that this user won't be able to access via this resetCode
+        )
+
         const token = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
             expiresIn: '1h'
         });

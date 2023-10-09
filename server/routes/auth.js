@@ -9,5 +9,7 @@ router.get('/', ctrl.welcome);
 router.post('/pre-register', ctrl.preRegister);
 router.post('/register', ctrl.register)
 router.post('/login', ctrl.login)
+router.post('/forgot-password', ctrl.forgotPassword)
+router.post('/access-account', ctrl.accessAccount);
 
 module.exports = router;
