@@ -8,6 +8,6 @@ const ctrl = require('../controllers/auth')
 router.get('/', ctrl.welcome);
 router.post('/pre-register', ctrl.preRegister);
 router.post('/register', ctrl.register)
-router.get('/login', ctrl.login)
+router.post('/login', ctrl.login)
 
 module.exports = router;
