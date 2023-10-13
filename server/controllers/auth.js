@@ -64,6 +64,8 @@ module.exports.register = async (req, res) => {
     try {
         //console.log(req.body);
         const { email, password } = jwt.verify(req.body.token, config.JWT_SECRET);
+        const userExist = await User.findOne({ email });
+        if (userExist) { return res.json({ error: "This email is used" }) }
         //decoded or {email, password} is a JSON = {email, password, iat, exp}
         const hashedPassword = await hashPassword(password); //hashedPassword has a Promise, gotta use await
         const newUser = await new User({
@@ -213,7 +215,8 @@ module.exports.accessAccount = async (req, res) => {
 
 module.exports.refreshToken = async (req, res) => {
     try {
-        const { _id } = jwt.verify(req.headers.refreshToken, config.JWT_SECRET);
+        //refresh_token was previous named refreshToken, it didn't work. Guess it overlapse with function name
+        const { _id } = jwt.verify(req.headers.refresh_token, config.JWT_SECRET);
         const user = await User.findById(_id);
 
         //now give the user a fresh new token
@@ -239,5 +242,17 @@ module.exports.refreshToken = async (req, res) => {
         console.log(err);
         //403 Forbidden
         return res.status(403).json({ error: "Failed to refresh token." })
+    }
+}
+
+module.exports.currentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        user.password = undefined;
+        user.resetCode = undefined;
+        res.json(user);
+    } catch (err) {
+        console.log(err);
+        res.status(403).json({ error: "Unauthorized" })
     }
 }

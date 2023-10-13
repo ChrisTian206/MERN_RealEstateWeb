@@ -15,6 +15,8 @@ router.post('/access-account', ctrl.accessAccount);
 //if token expires, ask a fresh new token
 router.get('/refresh-token', ctrl.refreshToken);
 
+router.get('/current-user', requireSignin, ctrl.currentUser)
+
 
 
 module.exports = router;
