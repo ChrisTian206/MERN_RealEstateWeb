@@ -16,9 +16,9 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        //trim: true,
+        trim: true,
         required: true,
-        //unique: [true, 'This emaill address has been used'],
+        unique: [true, 'This emaill address has been used'],
         lowercase: true,
     },
     password: {
