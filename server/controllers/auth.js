@@ -253,6 +253,54 @@ module.exports.currentUser = async (req, res) => {
         res.json(user);
     } catch (err) {
         console.log(err);
-        res.status(403).json({ error: "Unauthorized" })
+        res.status(403).json({ error: "Unauthorized to show current user" })
+    }
+}
+
+module.exports.publicProfile = async (req, res) => {
+    try {
+        const user = await User.findOne({ username: req.params.username })
+        user.password = undefined;
+        user.resetCode = undefined;
+        res.json(user);
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: "user not found..." })
+    }
+}
+
+module.exports.updatePassword = async (req, res) => {
+    try {
+        const { password } = req.body;
+        if (!password) return res.json({ error: "password is required." })
+        if (password && password.length < 6) return res.json({ error: "password length be at least 6 chars" })
+
+        //!!!!!!!!REMEMBER TO ADD await FOR User.find !!!!!!!
+        const user = await User.findByIdAndUpdate(req.user._id, {
+            password: await hashPassword(password)
+        })
+
+
+        res.json({ ok: true });
+    } catch (err) {
+        console.log(err);
+        return res.json({ error: "Unauthorized to update password" })
+    }
+}
+
+module.exports.updateProfile = async (req, res) => {
+    try {
+        const user = await User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+        user.password = undefined;
+        user.resetCode = undefined;
+        res.json(user);
+    } catch (err) {
+        console.log(err)
+        if (err.codeName === "DuplicateKey") {
+            //check user schema for field restrictions
+            return res.json({ error: "Email is already taken" })
+        } else {
+            return res.json({ error: "Unauthorized to update profile" })
+        }
     }
 }

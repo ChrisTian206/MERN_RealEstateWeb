@@ -16,7 +16,10 @@ router.post('/access-account', ctrl.accessAccount);
 router.get('/refresh-token', ctrl.refreshToken);
 
 router.get('/current-user', requireSignin, ctrl.currentUser)
+router.get('/profile/:username', ctrl.publicProfile);
 
+router.put('/update-password', requireSignin, ctrl.updatePassword)
+router.put('/update-profile', requireSignin, ctrl.updateProfile)
 
 
 module.exports = router;
