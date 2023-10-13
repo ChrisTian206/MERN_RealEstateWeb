@@ -12,6 +12,9 @@ router.post('/login', ctrl.login)
 router.post('/forgot-password', ctrl.forgotPassword)
 router.post('/access-account', ctrl.accessAccount);
 
+//if token expires, ask a fresh new token
+router.get('/refresh-token', ctrl.refreshToken);
+
 
 
 module.exports = router;

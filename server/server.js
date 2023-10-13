@@ -39,7 +39,6 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 
-
 //router
 /*
     How to manage routes seperately?

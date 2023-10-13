@@ -112,6 +112,14 @@ module.exports.login = async (req, res) => {
         if (!match) { return res.json({ error: "incorrect password" }) };
 
         //3. create JWT token
+        //Haha, you might ask why give them token for singin in.... Great question!
+        //token is given to users to be included in the headers of the post request
+        //Remember, REST architecture is stateless meaning it don't remember what 
+        //happened in previous steps. Having this token which can be verified, 
+        //help our server to know this user is authenticatated. Server will then
+        //allow this user to visit or update protected data.
+
+        //also, keep in mind the token here contains the user id, not email/password
         const token = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
             expiresIn: '1h'
         });
@@ -200,5 +208,36 @@ module.exports.accessAccount = async (req, res) => {
     } catch (err) {
         console.log(err);
         return res.json({ error: "Error occur. Please try again." })
+    }
+}
+
+module.exports.refreshToken = async (req, res) => {
+    try {
+        const { _id } = jwt.verify(req.headers.refreshToken, config.JWT_SECRET);
+        const user = await User.findById(_id);
+
+        //now give the user a fresh new token
+        const token = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
+            expiresIn: '1h'
+        });
+
+        const refreshToken = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
+            expiresIn: '7d'
+        });
+
+        //4 send the response
+        user.password = undefined;
+        user.resetCode = undefined;
+
+        return res.json({
+            token,
+            refreshToken,
+            user,
+        });
+
+    } catch (err) {
+        console.log(err);
+        //403 Forbidden
+        return res.status(403).json({ error: "Failed to refresh token." })
     }
 }
