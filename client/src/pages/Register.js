@@ -2,27 +2,37 @@ import { useState } from "react";
 import axios from 'axios';
 import { API } from "../config";
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false)
+
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
+            setLoading(true)
             //console.log({ email, password })
-            const { data } = await axios.post(`${API}/pre-register`, { email, password });
+            const { data } = await axios.post(`/pre-register`, { email, password });
             //console.log({ data })
             if (data.error) {
                 toast.error(data.error)
+                setLoading(false)
             } else {
                 toast.success('please check your email for activate token.')
+                setLoading(false)
+                navigate('/')
             }
         } catch (err) {
             console.log(err);
             toast.error('Error occur')
+            setLoading(false)
+
         }
     }
     return (
@@ -51,7 +61,11 @@ export default function Register() {
                                 onChange={e => setPassword(e.target.value)}
                             />
 
-                            <button className="btn btn-primary col-12 mb-4">Register</button>
+                            <button
+                                disabled={loading}
+                                className="btn btn-primary col-12 mb-4">
+
+                                {loading ? 'Loading..' : 'Register'}</button>
                         </form>
                     </div>
                 </div>
