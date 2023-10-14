@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import { API } from "../config";
+import toast from 'react-hot-toast'
 
 export default function Register() {
 
@@ -13,9 +14,15 @@ export default function Register() {
         try {
             //console.log({ email, password })
             const { data } = await axios.post(`${API}/pre-register`, { email, password });
-            console.log({ data })
+            //console.log({ data })
+            if (data.error) {
+                toast.error(data.error)
+            } else {
+                toast.success('please check your email for activate token.')
+            }
         } catch (err) {
             console.log(err);
+            toast.error('Error occur')
         }
     }
     return (
