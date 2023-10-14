@@ -12,8 +12,8 @@ export default function Register() {
 
         try {
             //console.log({ email, password })
-            const res = await axios.post(`${API}/pre-register`, { email, password });
-            console.log(res)
+            const { data } = await axios.post(`${API}/pre-register`, { email, password });
+            console.log({ data })
         } catch (err) {
             console.log(err);
         }
