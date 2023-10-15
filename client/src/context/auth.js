@@ -13,7 +13,7 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         let fromLocSto = localStorage.getItem('auth');
-        if (fromLocSto) setAuth()
+        if (fromLocSto) setAuth(JSON.parse(fromLocSto))
     }, [])
 
     //provides axios with server root route

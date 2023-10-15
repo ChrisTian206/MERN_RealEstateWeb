@@ -20,6 +20,9 @@ export default function ActivateAccount() {
             if (data.err) {
                 toast.error(data.err)
             } else {
+                //localStorage only stores key value pairs. value can only be strings,
+                //saving JSON need to use JSON.stringify(), then
+                //retrieving JSON need to use JSON.parse(window.localStorage.getItem())
                 window.localStorage.setItem('auth', JSON.stringify(data))
                 setAuth(data)
                 toast.success('Success! Welcome!')

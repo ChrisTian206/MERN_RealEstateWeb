@@ -6,12 +6,14 @@ import Main from './components/Main.js'
 import Register from './pages/Register';
 import { Toaster } from 'react-hot-toast'
 import ActivateAccount from './pages/auth/ActivateAccount';
+
 function App() {
   return (
     <BrowserRouter>
-      <Main />
-      <Toaster />
       <AuthProvider>
+        {/* moved Main into AuthProvider, bc Main also need auth to log out user  */}
+        <Main />
+        <Toaster />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />

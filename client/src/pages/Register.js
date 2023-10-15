@@ -32,7 +32,6 @@ export default function Register() {
             console.log(err);
             toast.error('Error occur')
             setLoading(false)
-
         }
     }
     return (
