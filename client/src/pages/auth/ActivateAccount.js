@@ -20,6 +20,7 @@ export default function ActivateAccount() {
             if (data.err) {
                 toast.error(data.err)
             } else {
+                window.localStorage.setItem('auth', JSON.stringify(data))
                 setAuth(data)
                 toast.success('Success! Welcome!')
                 navigate('/');
