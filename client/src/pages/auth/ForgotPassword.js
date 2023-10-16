@@ -2,17 +2,14 @@ import { useState } from "react";
 import axios from 'axios';
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from "../context/auth";
 import { Link } from "react-router-dom";
 
-export default function Login() {
+export default function ForgotPassword() {
 
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
 
     const navigate = useNavigate()
-    const [auth, setAuth] = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,15 +18,13 @@ export default function Login() {
             setLoading(true)
             //console.log({ email, password })
             //below is a sample of {data}
-            const { data } = await axios.post(`/login`, { email, password });
+            const { data } = await axios.post(`/forgot-password`, { email });
             //console.log({ data })
-            if (data.error) {
+            if (data?.error) {
                 toast.error(data.error)
                 setLoading(false)
             } else {
-                setAuth(data);
-                window.localStorage.setItem('auth', JSON.stringify(data))
-                toast.success('Welcome Back! You have successfully logged in!')
+                toast.success('Password recovery email is sent to the email address!')
                 setLoading(false)
                 navigate('/')
             }
@@ -39,10 +34,9 @@ export default function Login() {
             setLoading(false)
         }
     }
-
     return (
         <div>
-            <h1 className="display-1 bg-primary text-light p-5"> Login </h1>
+            <h1 className="display-1 bg-primary text-light p-5"> Forget Password </h1>
             <div className="container">
                 <div className="row">
                     <div className="col-lg-4 offset-lg-4">
@@ -56,24 +50,14 @@ export default function Login() {
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                             />
-                            <input
-                                type="password"
-                                placeholder="enter your password"
-                                className="form-control mb-4"
-                                required
-                                autoFocus
-                                value={password}
-                                onChange={e => setPassword(e.target.value)}
-                            />
-
                             <button
                                 disabled={loading}
                                 className="btn btn-primary col-12 mb-4">
 
-                                {loading ? 'Loading..' : 'Login'}</button>
+                                {loading ? 'Loading..' : 'Submit'}</button>
                         </form>
 
-                        <Link to='/auth/forgot-password'>Forgot Password</Link>
+                        <Link to='/login'>Go Back</Link>
                     </div>
                 </div>
             </div>
