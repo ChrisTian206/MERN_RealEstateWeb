@@ -18,7 +18,7 @@ function App() {
       <AuthProvider>
         {/* moved Main into AuthProvider, bc Main also need auth to log out user  */}
         <Main />
-        <Toaster />
+        <Toaster position='bottom-center' />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />

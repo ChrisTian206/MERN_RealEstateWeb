@@ -61,7 +61,6 @@ export default function Login() {
                                 placeholder="enter your password"
                                 className="form-control mb-4"
                                 required
-                                autoFocus
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                             />

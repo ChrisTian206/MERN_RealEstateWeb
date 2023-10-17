@@ -30,9 +30,20 @@ export default function Main() {
      */
     const isLogin = auth?.user !== null && auth.token && auth.refreshToken
 
+    const handlePostAd = () => {
+        if (isLogin) {
+            navigate('/ad/create');
+        } else {
+            navigate('/login');
+            toast.error('Please Log In')
+        }
+    }
+
     return (
         <nav className="nav d-flex justify-content-between p-2 lead">
             <NavLink className="nav-link" aria-current="page" to="/">Home</NavLink>
+
+            <a className="nav-link" onClick={handlePostAd} style={{ cursor: 'pointer' }}>Post Ad</a>
 
             {!isLogin ? (
                 <>
