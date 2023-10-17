@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import { Toaster } from 'react-hot-toast'
 import ActivateAccount from './pages/auth/ActivateAccount';
+import AccessAccount from './pages/auth/AccessAccount';
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path='/register' element={<Register />} />
           <Route path='/auth/forgot-password' element={<ForgotPassword />} />
           <Route path='/auth/account-activate/:token' element={<ActivateAccount />} />
+          <Route path='/auth/access-account/:token' element={<AccessAccount />} />
+
         </Routes>
       </AuthProvider>
     </BrowserRouter>

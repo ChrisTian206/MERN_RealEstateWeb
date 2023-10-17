@@ -11,12 +11,12 @@ export default function AccessAccount() {
     //the [] at the tail means token is one of the dependency,
     //without token, don't run requestActivation();
     useEffect(() => {
-        if (token) requestActivation()
+        if (token) requestAccess()
     }, [token])
 
-    const requestActivation = async () => {
+    const requestAccess = async () => {
         try {
-            const { data } = await axios.post('/register', { token })
+            const { data } = await axios.post('/access-account', { resetCode: token })
             if (data.err) {
                 toast.error(data.err)
             } else {
@@ -37,7 +37,7 @@ export default function AccessAccount() {
         <div className="display-1 d-flex justify-content-center align-items-center vh-100"
             style={{ marginTop: '-5%' }}>
 
-            Account Activate Page
+            Please wait...
         </div>
     )
 }
