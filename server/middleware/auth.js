@@ -3,7 +3,7 @@ const { JWT_SECRET } = require('../config')
 
 module.exports.requireSignin = (req, res, next) => {
     try {
-        const decoded = jwt.verify(req.headers.authorization, JWT_SECRET);
+        const decoded = jwt.verify(req.headers.Authorization, JWT_SECRET);
         req.user = decoded;
         /**
          * When user sign in, they will pass the token in as req. Each user

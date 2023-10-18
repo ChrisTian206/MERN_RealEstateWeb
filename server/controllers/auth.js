@@ -68,17 +68,17 @@ module.exports.register = async (req, res) => {
         if (userExist) { return res.json({ error: "This email is used" }) }
         //decoded or {email, password} is a JSON = {email, password, iat, exp}
         const hashedPassword = await hashPassword(password); //hashedPassword has a Promise, gotta use await
-        const newUser = await new User({
+        const user = await new User({
             username: uuid(),
             email,
             password: hashedPassword,
         }).save(); //saving new instance also need await, so it's good to put it behind that.
 
-        const token = jwt.sign({ _id: newUser._id }, config.JWT_SECRET, {
+        const token = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
             expiresIn: '1h'
         });
 
-        const refreshToken = jwt.sign({ _id: newUser._id }, config.JWT_SECRET, {
+        const refreshToken = jwt.sign({ _id: user._id }, config.JWT_SECRET, {
             expiresIn: '7d'
         });
 
@@ -87,13 +87,13 @@ module.exports.register = async (req, res) => {
          * to the other end. Because I will return res.json().
          * Anyway, user's hashedpassword is actually saved in DB.
          */
-        newUser.password = undefined;
-        newUser.resetCode = undefined;
+        user.password = undefined;
+        user.resetCode = undefined;
 
         return res.json({
             token,
             refreshToken,
-            newUser,
+            user,
         })
     } catch (err) {
         console.log(err);
