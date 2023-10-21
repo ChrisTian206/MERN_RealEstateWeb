@@ -13,11 +13,13 @@ export default function PrivateRoute() {
 
     const getCurrentUser = async () => {
         try {
-            const { data } = await axios.get('/access-account', {
+            console.log("in PrivateRoute, ", auth?.token)
+            const { data } = await axios.get('/current-user', {
                 headers: {
                     Authorization: auth?.token,
                 }
             });
+            console.log(data)
             setOk(true);
         } catch (err) {
             console.log(err);

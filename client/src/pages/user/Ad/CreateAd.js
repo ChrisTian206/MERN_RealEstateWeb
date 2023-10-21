@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import SideBar from "../../../components/SideBar"
+import SideBar from "../../../components/nav/SideBar"
 import { useState } from "react"
 
 export default function CreateAd() {
@@ -11,7 +11,8 @@ export default function CreateAd() {
         <div>
             <h1 className="display-1 bg-primary text-light p-5"> Create Ad </h1>
             <SideBar />
-            <div className="d-flex justify-content-center align-items-center vh-100">
+            <div className="d-flex justify-content-center align-items-center vh-100"
+                style={{ marginTop: '-8%' }}>
                 <div className="col-lg-6">
                     <button>Sell</button>
                 </div>

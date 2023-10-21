@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/auth';
 import Home from './pages/Home'
 import Login from './pages/Login'
-import Main from './components/Main.js'
+import Main from './components/nav/Main';
 import Register from './pages/Register';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import { Toaster } from 'react-hot-toast'
@@ -29,7 +29,7 @@ function App() {
 
           <Route path='/' element={<PrivateRoute />}>
             <Route path='dashboard' element={<Dashboard />} />
-            <Route path='ad/create' element={<CreateAd />} />
+            {/* <Route path='ad/create' element={<CreateAd />} /> */}
           </Route>
 
         </Routes>
