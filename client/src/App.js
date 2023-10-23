@@ -29,7 +29,7 @@ function App() {
 
           <Route path='/' element={<PrivateRoute />}>
             <Route path='dashboard' element={<Dashboard />} />
-            {/* <Route path='ad/create' element={<CreateAd />} /> */}
+            <Route path='ad/create' element={<CreateAd />} />
           </Route>
 
         </Routes>
