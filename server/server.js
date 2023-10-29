@@ -37,7 +37,10 @@ app.use(express.json())
 //morgan helps dev by auto generating request details,
 //response time, status code, route in terminal
 app.use(morgan('dev'))
-app.use(cors())
+const corsOptions = {
+    origin: 'http://localhost:3000', // This should be the port React is using
+};
+app.use(cors(corsOptions));
 
 //router
 /*
