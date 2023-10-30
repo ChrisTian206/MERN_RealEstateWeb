@@ -33,7 +33,9 @@ const AuthProvider = ({ children }) => {
 
             if (err.response) {
                 // token is expired
-                if (err.response.status === 401 && !originalConfig._retry) {
+                //Changed from 401 to 500. 401 is for unauthorized. 500 is for internal server error
+                //When token is expired, the server would return a 500 error.
+                if (err.response.status === 500 && !originalConfig._retry) {
                     originalConfig._retry = true;
 
                     try {
