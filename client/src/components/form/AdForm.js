@@ -1,6 +1,8 @@
 import { useState } from "react"
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { GOOGLE_PLACES_KEY } from "../../../config";
+import { GOOGLE_PLACES_KEY } from "../../config";
+import Currency from "react-currency-input-field";
+import CurrencyInput from "react-currency-input-field";
 
 export default function AdForm({ action, type }) {
 
@@ -12,7 +14,7 @@ export default function AdForm({ action, type }) {
         bedrooms: '',
         bathrooms: '',
         parking: '',
-        landSize: '',
+        landsize: '',
         type: '',
         title: '',
         description: '',
@@ -20,18 +22,78 @@ export default function AdForm({ action, type }) {
     });
     return (
         <>
-            <div className="mb-3 form-control">
+            <div className="mb-3 form-control " >
                 <GooglePlacesAutocomplete
                     apiKey={GOOGLE_PLACES_KEY}
                     apiOptions='us'
                     selectProps={{
                         defaultInputValue: ad?.address,
                         placeholder: "Search for address...",
-                        onChange: (address) => console.log(address)
+                        onChange: ({ value }) => setAd({ ...ad, address: value.description })
                     }} />
-
-                <button className="btn btn-primary btn-lg col-12 mt-3">Submit</button>
             </div>
+
+            <CurrencyInput placeholder="Enter Price"
+                defaultValue={ad?.price}
+                className="form-control mb-3"
+                onValueChange={(value) => setAd({ ...ad, price: value })} />
+
+
+            <input
+                type="number"
+                min="0"
+                className="form-control mb-3"
+                placeholder="Enter how many bedrooms"
+                value={ad.bedrooms}
+                onChange={(e) => setAd({ ...ad, bedrooms: e.target.value })}
+            />
+
+            <input
+                type="number"
+                min="0"
+                className="form-control mb-3"
+                placeholder="Enter how many bathrooms"
+                value={ad.bathrooms}
+                onChange={(e) => setAd({ ...ad, bathrooms: e.target.value })}
+            />
+
+            <input
+                type="number"
+                min="0"
+                className="form-control mb-3"
+                placeholder="Enter how many parking spots"
+                value={ad.parking}
+                onChange={(e) => setAd({ ...ad, parking: e.target.value })}
+            />
+
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Size of land/property"
+                value={ad.landsize}
+                onChange={(e) => setAd({ ...ad, landsize: e.target.value })}
+            />
+
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Enter title"
+                value={ad.title}
+                onChange={(e) => setAd({ ...ad, title: e.target.value })}
+            />
+
+            <textarea
+                className="form-control mb-3"
+                placeholder="Enter description"
+                value={ad.description}
+                onChange={(e) => setAd({ ...ad, description: e.target.value })}
+            />
+
+            <button className="btn btn-primary">Submit</button>
+
+            <pre>
+                {JSON.stringify(ad, null, 4)}
+            </pre>
         </>
     )
 }
