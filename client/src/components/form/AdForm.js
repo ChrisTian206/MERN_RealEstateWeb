@@ -1,6 +1,6 @@
 import { useState } from "react"
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
-import { GOOGLE_PLACES_KEY } from "../../config";
+import { GOOGLE_PLACES_KEY } from "../../../config";
 
 export default function AdForm({ action, type }) {
 
