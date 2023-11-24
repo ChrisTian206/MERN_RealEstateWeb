@@ -53,7 +53,10 @@ app.use(cors(corsOptions));
     6. app.use('/pre-fix', router file)
 */
 const authRoute = require('./routes/auth')
+const adRoute = require('./routes/ad')
+
 app.use('/api', authRoute)
+app.use('/api', adRoute)
 
 
 app.listen(8000, () => {
