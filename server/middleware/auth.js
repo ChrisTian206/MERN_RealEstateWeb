@@ -11,7 +11,7 @@ module.exports.requireSignin = (req, res, next) => {
          * When we decode the token, we are able to get their user._id then
          * we will be able to find that specific user
          */
-        console.log(decoded)
+        console.log("requireSignIn: ", decoded)
         next();
     } catch (err) {
         console.log("received: ", req.headers.authorization)

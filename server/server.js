@@ -32,7 +32,8 @@ mongoose.connect(DATABASE)
 //express.json() handles incoming data in the form of JSON
 //prepare it in req.body for server to work with.
 //otherwise would get undefined 
-app.use(express.json())
+//limit the size of the data to 8mb for images upload
+app.use(express.json({ limit: '8mb' }))
 
 //morgan helps dev by auto generating request details,
 //response time, status code, route in terminal

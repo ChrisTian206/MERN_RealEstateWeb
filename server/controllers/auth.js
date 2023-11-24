@@ -5,7 +5,8 @@ const { comparePassword, hashPassword } = require('../helpers/auth')
 const User = require('../models/User')
 const emailValidator = require('email-validator')
 
-//nanoid is an ES6 module package, while I mostly use CommonJS
+//nanoid is an ES6 module package
+//Since I use commonJS, I will use uuid instead
 
 const { v4: uuid } = require('uuid')
 

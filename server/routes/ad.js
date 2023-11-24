@@ -5,6 +5,6 @@ const { requireSignin } = require('../middleware/auth');
 //just need to pass the functions in
 const ctrl = require('../controllers/ad')
 
-router.post('/upload-image', requireSignin, ctrl.uploadImage);
+router.post('/upload-images', requireSignin, ctrl.uploadImage);
 
 module.exports = router;

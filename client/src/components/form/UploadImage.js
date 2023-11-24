@@ -1,4 +1,5 @@
 import resizer from 'react-image-file-resizer';
+import axios from 'axios';
 
 export default function UploadImage({ ad, setAd }) {
 
