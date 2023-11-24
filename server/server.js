@@ -23,7 +23,6 @@ const app = express();
 
 
 //Database
-console.log(DATABASE.DATABASE)
 mongoose.connect(DATABASE)
     .then(() => { console.log("database is connected!!") })
     .catch((err) => { console.log(err) })

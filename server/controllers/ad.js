@@ -33,7 +33,7 @@ module.exports.uploadImage = async (req, res) => {
                 res.status(400).json({ error: 'Upload to S3 failed' })
             }
             console.log(data);
-            res.sent(data)
+            res.send(data)
         })
     } catch (err) {
         console.log(err)

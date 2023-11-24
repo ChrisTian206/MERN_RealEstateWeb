@@ -1,5 +1,6 @@
 import resizer from 'react-image-file-resizer';
 import axios from 'axios';
+import { Avatar } from 'antd';
 
 export default function UploadImage({ ad, setAd }) {
 
@@ -53,16 +54,24 @@ export default function UploadImage({ ad, setAd }) {
 
     return (
         <>
-
-
             <label className="btn btn-secondary btn-lg">
-                Upload Images
+                {ad.uploading ? 'Uploading...' : 'Upload Images'}
                 <input type="file"
                     accept="image/*"
                     onChange={handleUploadImages}
                     multiple
                     hidden />
             </label>
+
+            {ad?.photos?.map((photo) => (
+                <Avatar key={photo.key}
+                    src={photo.Location}
+                    size={75}
+                    shape="square"
+                    className="ml-3 mb-3"
+                />
+            )
+            )}
         </>
     )
 }
