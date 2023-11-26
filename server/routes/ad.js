@@ -6,5 +6,6 @@ const { requireSignin } = require('../middleware/auth');
 const ctrl = require('../controllers/ad')
 
 router.post('/upload-images', requireSignin, ctrl.uploadImage);
+router.post('/delete-images', requireSignin, ctrl.deleteImage)
 
 module.exports = router;

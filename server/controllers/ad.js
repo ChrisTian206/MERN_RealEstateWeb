@@ -40,3 +40,20 @@ module.exports.uploadImage = async (req, res) => {
         res.json({ error: err.message })
     }
 }
+
+module.exports.deleteImage = async (req, res) => {
+    try {
+        const { Key, Bucket } = req.body;
+        config.AWS_S3.deleteObject({ Bucket, Key }, (err, data) => {
+            if (err) {
+                console.log(err);
+                res.sendStatus(400);
+            } else {
+                res.send({ message: 'Image deleted successfully' })
+            }
+        })
+    } catch (res) {
+        console.log(err)
+        res.json({ error: err.message })
+    }
+}
