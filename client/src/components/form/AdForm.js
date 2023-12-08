@@ -22,8 +22,9 @@ export default function AdForm({ action, type }) {
     });
     return (
         <>
-            <UploadImage ad={ad} setAd={setAd} />
-            <div className="mb-3 " >
+
+            <div className="mb-3" >
+                <UploadImage ad={ad} setAd={setAd} />
                 <GooglePlacesAutocomplete
                     apiKey={GOOGLE_PLACES_KEY}
                     apiOptions='us'

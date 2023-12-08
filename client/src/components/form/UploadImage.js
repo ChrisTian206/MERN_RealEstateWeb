@@ -24,7 +24,7 @@ export default function UploadImage({ ad, setAd }) {
                                 try {
                                     let { data } = await axios.post(`/upload-images`, { image: uri });
                                     //image is sent to the back-end in base 64 format.
-                                    setAd({ ...ad, photos: [...ad.photos, data], uploading: false })
+                                    setAd((prev) => ({ ...prev, photos: [...prev.photos, data], uploading: false }))
                                 } catch (err) {
                                     console.log(err);
                                     setAd({ ...ad, uploading: false })
@@ -45,6 +45,7 @@ export default function UploadImage({ ad, setAd }) {
     const handleDeleteImage = async (photo) => {
         const confirm = window.confirm('Are you sure you want to delete this image?')
         if (!confirm) return;
+        setAd({ ...ad, uploading: true });
 
         try {
             //an example of photo object at the bottom
@@ -56,7 +57,7 @@ export default function UploadImage({ ad, setAd }) {
                 //This handles the front-end delete
                 setAd((prev) => ({
                     ...prev,
-                    photos: prev.photos.filter((p) => p.key !== photo.key),
+                    photos: prev.photos.filter((p) => p.Key !== photo.Key),
                     uploading: false
                 }))
             }
@@ -77,9 +78,10 @@ export default function UploadImage({ ad, setAd }) {
                     hidden />
             </label>
 
-            {ad?.photos?.map((photo) => (
-                <Avatar key={photo.key}
-                    src={photo.Location}
+            {ad?.photos?.map((photo, index) => (
+                <Avatar
+                    key={index}
+                    src={photo?.Location}
                     size={75}
                     shape="square"
                     className="ml-3 mb-3"
